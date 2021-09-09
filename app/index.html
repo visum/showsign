@@ -18,18 +18,45 @@
         font-size: 100%;
       }
 
-      #slides {
+      #supporters {
         position: absolute;
         top: 0;
         left: 0;
         bottom: 0;
         width: 40%;
+        background-color: antiquewhite;
+        padding: 20px;
+        border-right: 5px solid rgb(121, 70, 33);
       }
 
-      #slide {
+      #thanks {
+        position: absolute;
+        height: 20%;
+        top: 0;
+        left: 0;
+        width: 100%;
+        font-weight: bold;
+        font-size: 3rem;
+        text-align: center;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #supporter {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        text-align: center;
+        font-size: 4rem;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       #messages {
@@ -51,34 +78,44 @@
 
       #logo {
         position: absolute;
-        bottom: 0;
-        right: 0;
+        bottom: 5px;
+        left: 5px;
+      }
+
+      .smaller {
+        font-size: 0.8em;
       }
     </style>
   </head>
   <body>
-    <div id="messages"><span id="message">Welcome</span></div>
-    <div id="slides"><img id="slide" src="/slide/0" /></div>
+    <div id="messages"><span id="message"></span></div>
+    <div id="supporters">
+      <div id="thanks"><div class="smaller">Thank you supporters of the</div><div>Southwest Livestock Show!</div></div>
+      <div id="supporter"></div>
+    </div>
     <img id="logo" src="/sw-livestock-logo-black.png" />
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      const imageElement = document.getElementById("slide");
       const messageElement = document.getElementById("message");
+      const supporterElement = document.getElementById("supporter");
       const socket = io();
       let cacheBuster = 0;
+
       socket.on("message", (data) => {
         messageElement.textContent = data;
       });
 
       socket.emit("getMessage");
 
-      socket.on("slide", url => {
-        imageElement.src = url;
+      socket.on("supporter", name => {
+        supporterElement.textContent = name;
       });
 
       setInterval(() => {
-        socket.emit("getSlide");
-      }, 15000);
+        socket.emit("getSupporter");
+      }, 10);
+
+      socket.emit("getSupporter");
 
     </script>
   </body>

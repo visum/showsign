@@ -5,22 +5,19 @@ const path = require('path');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const PORT = process.env.PORT || 8080;
-const slideIntervalDuration = 15000;
-const fs = require('fs');
+const nameIntervalDuration = 10000;
+// const fs = require('fs');
+const names = require('./names.json');
 
 let message = "Welcome to the Southwest Livestock Show!";
-let imageIndex = 0;
+let nameIndex = 0;
 
-const fileExcpetions = [".DS_Store", "images.md"];
+const allNames = names.names;
 
-const allImages = fs.readdirSync(path.resolve("./images/")).filter(i => {
-  return !fileExcpetions.includes(i);
-});
-
-app.get("/slide/:index", (req, res) => {
-  const imagePath = path.resolve("./images/" + allImages[req.params.index]);
-  res.sendFile(imagePath);
-});
+// app.get("/slide/:index", (req, res) => {
+//   const imagePath = path.resolve("./images/" + allImages[req.params.index]);
+//   res.sendFile(imagePath);
+// });
 
 app.use(express.static(path.join(__dirname, 'app')));
 
@@ -31,6 +28,7 @@ server.listen(PORT, () => {
 io.on("connection", (socket) => {
   socket.on("setMessage", (data) => {
     console.log("set message", data);
+    message = data;
     socket.broadcast.emit("message", data);
   });
 
@@ -38,14 +36,14 @@ io.on("connection", (socket) => {
     socket.emit("message", message);
   });
 
-  socket.on("getSlide", () => {
-    socket.emit("slide", `/slide/${imageIndex}`);
+  socket.on("getSupporter", () => {
+    socket.emit("supporter", allNames[nameIndex]);
   });
 });
 
 setInterval(() => {
-  imageIndex += 1;
-  if (imageIndex >= allImages.length) {
-    imageIndex = 0;
+  nameIndex += 1;
+  if (nameIndex >= allNames.length) {
+    nameIndex = 0;
   }
-}, slideIntervalDuration);
+}, nameIntervalDuration);
