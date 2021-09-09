@@ -18,13 +18,20 @@
       const messageArea = document.getElementById("message");
       const submitButton = document.getElementById("button");
 
+      const toBR = (input) => {
+        return input.replace(/\n/gi, "<br/>");
+      };
+      const toNL = (input) => {
+        return input.replace(/(<br\/>)|(<br \/>)/gi, "\n");
+      };
+
       submitButton.addEventListener("click", () => {
         const newMessage = messageArea.value;
-        socket.emit("setMessage", newMessage);
+        socket.emit("setMessage", toBR(newMessage));
       });
 
       socket.on("message", (data) => {
-        messageArea.value = data;
+        messageArea.value = toNL(data);
       });
 
       socket.emit("getMessage");

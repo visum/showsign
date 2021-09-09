@@ -102,7 +102,7 @@
       let cacheBuster = 0;
 
       socket.on("message", (data) => {
-        messageElement.textContent = data;
+        messageElement.innerHTML = data;
       });
 
       socket.emit("getMessage");
@@ -113,7 +113,7 @@
 
       setInterval(() => {
         socket.emit("getSupporter");
-      }, 10);
+      }, 10000);
 
       socket.emit("getSupporter");
 
