@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+  <head>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html, body {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      body {
+        position: relative;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: 100%;
+      }
+
+      #slides {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 40%;
+      }
+
+      #slide {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      #messages {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 60%;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #message {
+        text-align: center;
+        font-size: 6rem;
+      }
+
+      #logo {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="messages"><span id="message">Welcome</span></div>
+    <div id="slides"><img id="slide" src="/slide/0" /></div>
+    <img id="logo" src="/sw-livestock-logo-black.png" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const imageElement = document.getElementById("slide");
+      const messageElement = document.getElementById("message");
+      const socket = io();
+      let cacheBuster = 0;
+      socket.on("message", (data) => {
+        messageElement.textContent = data;
+      });
+
+      socket.emit("getMessage");
+
+      socket.on("slide", url => {
+        imageElement.src = url;
+      });
+
+      setInterval(() => {
+        socket.emit("getSlide");
+      }, 15000);
+
+    </script>
+  </body>
+</html>

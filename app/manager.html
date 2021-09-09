@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      #message {
+        width: 100%;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="message"></textarea><br />
+    <button type="button" id="button">Update</button>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const messageArea = document.getElementById("message");
+      const submitButton = document.getElementById("button");
+
+      submitButton.addEventListener("click", () => {
+        const newMessage = messageArea.value;
+        socket.emit("setMessage", newMessage);
+      });
+
+      socket.on("message", (data) => {
+        messageArea.value = data;
+      });
+
+      socket.emit("getMessage");
+
+    </script>
+  </body>
+</html>
