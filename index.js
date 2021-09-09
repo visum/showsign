@@ -11,7 +11,7 @@ const fs = require('fs');
 let message = "Welcome to the Southwest Livestock Show!";
 let imageIndex = 0;
 
-const fileExcpetions = [".DS_Store"];
+const fileExcpetions = [".DS_Store", "images.md"];
 
 const allImages = fs.readdirSync(path.resolve("./images/")).filter(i => {
   return !fileExcpetions.includes(i);

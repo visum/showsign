@@ -1,0 +1,1 @@
+Put images in this folder. Images in here when the server starts will be cycled through.
