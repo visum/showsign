@@ -18,15 +18,18 @@
         font-size: 100%;
       }
 
+      #wrapper {
+        display: flex;
+        height: 100%;
+        width: 100%;
+      }
+
       #supporters {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 40%;
+        position: relative;
         background-color: antiquewhite;
         padding: 20px;
         border-right: 5px solid rgb(121, 70, 33);
+        flex: 2;
       }
 
       #thanks {
@@ -36,7 +39,7 @@
         left: 0;
         width: 100%;
         font-weight: bold;
-        font-size: 3rem;
+        font-size: 5rem;
         text-align: center;
 
         display: flex;
@@ -46,26 +49,17 @@
       }
 
       #supporter {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
         text-align: center;
-        font-size: 4rem;
-
+        font-size: 14rem;
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 100%;
       }
 
       #messages {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        width: 60%;
-        padding: 10px;
+        flex: 3;
+        padding: 1rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -73,7 +67,7 @@
 
       #message {
         text-align: center;
-        font-size: 6rem;
+        font-size: 16rem;
       }
 
       #logo {
@@ -85,24 +79,44 @@
       .smaller {
         font-size: 0.8em;
       }
+
+      .supporters-only #messages {
+        display: none;
+      }
+
+      .supporters-only #supporter {
+        font-size: 22rem;
+      }
+
+      .supporters-only #thanks {
+        font-size: 10rem;
+      }
     </style>
   </head>
   <body>
-    <div id="messages"><span id="message"></span></div>
-    <div id="supporters">
-      <div id="thanks"><div class="smaller">Thank you supporters of the</div><div>Southwest Livestock Show!</div></div>
-      <div id="supporter"></div>
+    <div id="wrapper">
+      <div id="supporters">
+        <div id="thanks"><div class="smaller">Thank you supporters of the</div><div>Southwest Livestock Show</div></div>
+        <div id="supporter"></div>
+        <img id="logo" src="/sw-livestock-logo-black.png" />
+      </div>
+      <div id="messages"><span id="message"></span></div>
     </div>
-    <img id="logo" src="/sw-livestock-logo-black.png" />
     <script src="/socket.io/socket.io.js"></script>
     <script>
       const messageElement = document.getElementById("message");
       const supporterElement = document.getElementById("supporter");
+      const wrapperElement = document.getElementById("wrapper");
       const socket = io();
       let cacheBuster = 0;
 
       socket.on("message", (data) => {
         messageElement.innerHTML = data;
+        if(data == "") {
+          wrapperElement.classList.add("supporters-only");
+        } else {
+          wrapperElement.classList.remove("supporters-only");
+        }
       });
 
       socket.emit("getMessage");
